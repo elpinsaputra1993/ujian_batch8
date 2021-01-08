@@ -11,24 +11,30 @@ import {
 import axios from 'axios';
 import CardView from 'react-native-cardview';
 import {TextInput} from 'react-native-gesture-handler';
+import SelectPicker from 'react-native-form-select-picker';
 
 const SearchData = ({navigation}) => {
-  const [users, setUsers] = useState([]);
+  const [selected, setSelected] = useState();
   const [members, setMembers] = useState([]);
   const [atribute, setAtribute] = useState('');
   const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
+  const options = ['name', 'email', 'phone', 'address'];
   const getData = () => {
-    if (atribute == '' && keyword == '') {
-      axios.get('http://192.168.43.10:3000/member/').then((res) => {
-        const members = res.data.data;
-        console.log('tes : ' + JSON.stringify(res.data.data));
-        setMembers(members);
-      });
+    if (keyword == '' || atribute == '') {
+      //   axios.get('http://192.168.43.10:3000/member/').then((res) => {
+      //     const members = res.data.data;
+      //     console.log('tes : ' + JSON.stringify(res.data.data));
+      //     setMembers(members);
+      //   });
+
+      alert(
+        'Pastikan anda sudah memasuki nilai pada Atribute dan Keyword dengan benar ',
+      );
     } else {
       axios
         .get('http://192.168.43.10:3000/member/' + `${atribute}/${keyword}`)
@@ -42,11 +48,35 @@ const SearchData = ({navigation}) => {
 
   return (
     <View>
-      <TextInput
+      <SelectPicker
+        placeholder="Pilih Atribute"
+        onValueChange={(value) => {
+          // Do anything you want with the value.
+          // For example, save in state.
+          setAtribute(value);
+        }}
+        selected={selected}>
+        {Object.values(options).map((val, index) => (
+          <SelectPicker.Item label={val} value={val} key={index} />
+        ))}
+      </SelectPicker>
+      {/* <SelectPicker
+        placeholder="Pilih Atribute"
+        onValueChange={(value) => {
+          // Do anything you want with the value.
+          // For example, save in state.
+          setSelected(value);
+        }}
+        selected={selected}>
+        {Object.values(options).map((val, index) => (
+          <SelectPicker.Item label={val} value={val} key={index} />
+        ))}
+      </SelectPicker> */}
+      {/* <TextInput
         placeholder="Atribute"
         style={{borderWidth: 1, marginBottom: 5}}
         value={atribute}
-        onChangeText={(value) => setAtribute(value)}></TextInput>
+        onChangeText={(value) => setAtribute(value)}></TextInput> */}
       <TextInput
         placeholder="Keyword"
         style={{borderWidth: 1, marginBottom: 5}}
